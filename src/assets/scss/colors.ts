@@ -1,0 +1,15 @@
+export const base03 = "#759efb";
+export const base04 = "#1F64FF";
+export const base05 = "#1A3EC1";
+export const base06 = "#072AC8";
+export const black = "#000022";
+export const error = "#EA5050";
+export const success06 = "#15D6B3";
+export const success05 = "#73FBD3";
+export const success04 = "#35D5C3";
+export const orange04 = "#FFB36C";
+export const yellow04 = "#FFD130";
+export const white04 = "#FFFFFF";
+export const disabled04 = "#AAB2C8";
+export const disabled05 = "#F5F6FA";
+export const disabled03 = "#F5F6FA";
