@@ -2,7 +2,10 @@
 import styled from "@emotion/styled";
 import * as colors from "../../assets/scss/colors";
 
-const AuthFormLayoutStyles = styled.form `
+//components
+import AuthFormLayoutComponent from "./AuthFormLayout";
+
+const AuthFormLayout = styled(AuthFormLayoutComponent) `
   display: grid;
   grid-template-columns: 1fr 550px;
   align-items: center;
@@ -30,4 +33,4 @@ export const AuthFormIconStyles = styled.span `
   }
 `;
 
-export default AuthFormLayoutStyles;
+export default AuthFormLayout;

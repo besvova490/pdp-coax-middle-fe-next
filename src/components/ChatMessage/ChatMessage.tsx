@@ -1,4 +1,5 @@
 import { DetailedHTMLProps, HTMLAttributes } from "react";
+import ReactHtmlParser from "react-html-parser";
 
 //assets
 import { ChatMessageContent, ChatMessageInfo } from "./ChatMessageStyled";
@@ -6,14 +7,16 @@ import { ChatMessageContent, ChatMessageInfo } from "./ChatMessageStyled";
 interface InterfaceChatMessage extends
 DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   active?: boolean;
+  message?: string;
+  isMy?: boolean;
 }
 
-function ChatMessage(props: InterfaceChatMessage) {
+function ChatMessage({ message, ...props }: InterfaceChatMessage) {
 
   return (
     <div { ...props }>
       <ChatMessageContent>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem, iure.
+        { message ? ReactHtmlParser(message) : null }
       </ChatMessageContent>
       <ChatMessageInfo>
         23:15

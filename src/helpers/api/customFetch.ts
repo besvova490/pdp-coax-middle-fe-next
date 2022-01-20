@@ -18,7 +18,7 @@ function requestNewToken() {
   const cookies = new Cookies();
   const refreshToken = cookies.get("refreshToken");
 
-  return axios.post(`${API_URL}/auth/refresh`, { refresh: refreshToken }).then(res => {
+  return axios.post(`${API_URL}/auth/refresh`, { refreshToken }).then(res => {
     const decodedAccessToken: Record<string, any> = jwtDecode(res.data.accessToken);
     const accessTokenExpTime = decodedAccessToken && new Date(decodedAccessToken.exp * 1000);
     cookies.set("accessToken", res.data.accessToken, { expires: accessTokenExpTime, path: "/" });
@@ -27,7 +27,7 @@ function requestNewToken() {
     if (error.response.status === 401 || !refreshToken) {
       cookies.remove("accessToken", { path: "/" });
       cookies.remove("refreshToken", { path: "/" });
-      window.location.href = "/auth/login";
+      window.location.href = "/login";
     }
   });
 }
@@ -54,7 +54,7 @@ client.interceptors.response.use(r => r, error => {
 
   // Don't try to renew while login in
   if (error.response.status === 401 && originalRequest.url) {
-    if (originalRequest.url === "/auth") {
+    if (originalRequest.url === "/auth/login") {
       return Promise.reject(error.response ? error.response : error);
     }
   }

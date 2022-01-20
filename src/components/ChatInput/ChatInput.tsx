@@ -1,11 +1,18 @@
+/* eslint-disable no-unused-vars */
 import { useState, useRef } from "react";
-import { Editor, EditorState, convertFromRaw, RichUtils, Modifier } from "draft-js";
+import { Editor, EditorState, convertFromRaw, RichUtils, Modifier, ContentState } from "draft-js";
+import { FiSend } from "react-icons/fi";
+import { stateToHTML } from "draft-js-export-html";
 
 //components
 import EmojiPicker from "../EmojiPicker";
 
+//types
+import InterfaceChatInput from "src/types/components/ChatInput";
+
 //styles
-import ChatInputStyles, { ChatControls, ChatControlIcon } from "./ChatInputStyles";
+import ChatInputStyles, { ChatControls, ChatControlIcon, ChatSendButton } from "./ChatInputStyles";
+
 
 const EDITOR_CONTROLS = [
   { label: "Bold", style: "BOLD" },
@@ -28,7 +35,7 @@ const emptyContentState = convertFromRaw({
   ],
 });
 
-function ChatInput() {
+function ChatInput({ onSendMessage, onBlur, onFocus }: InterfaceChatInput) {
   const [editorState, setEditorState] = useState(() => EditorState.createWithContent(emptyContentState));
 
   const editor = useRef(null);
@@ -49,13 +56,22 @@ function ChatInput() {
     const newContent = Modifier.replaceText(
       currentContent,
       currentSelection,
-      emoji
+      ` ${emoji} `
     );
 
     const newEditorState = EditorState.push(editorState, newContent, "insert-characters");
     
     setEditorState(EditorState.forceSelection(newEditorState, newContent.getSelectionAfter()));
   };
+
+  const handleSendMessage = () => {
+    const content = stateToHTML(editorState.getCurrentContent());
+
+    const editorStateClear = EditorState.push(editorState, ContentState.createFromText(""), "delete-character");
+
+    onSendMessage(`${content}`);
+    setEditorState(editorStateClear);
+  }
 
   return (
     <ChatInputStyles>
@@ -80,7 +96,12 @@ function ChatInput() {
         editorState={editorState}
         onChange={setEditorState}
         placeholder="Type you massage"
+        onFocus={() => onFocus && onFocus()}
+        onBlur={() => onBlur && onBlur()}
       />
+      <ChatSendButton onClick={handleSendMessage}>
+        <FiSend/>
+      </ChatSendButton>
     </ChatInputStyles>
   );
 }

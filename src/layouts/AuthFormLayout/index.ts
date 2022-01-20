@@ -1,3 +1,3 @@
-import AuthFormLayout from "./AuthFormLayout";
+import AuthFormLayout from "./AuthFormLayoutStyles";
 
 export default AuthFormLayout;

@@ -46,6 +46,22 @@ const auth = {
       }
       throw err;
     }
+  },
+
+  getProfile: async() => {
+    try {
+      const result = await fetch({
+        url: "/auth/profile",
+        method: "GET",
+      });
+
+      return result;
+    } catch (err: any) {
+      if (err.data) {
+        throw err.data;
+      }
+      throw err;
+    }
   }
 };
 

@@ -48,4 +48,31 @@ export const ChatControlIcon = styled(ChatControlIconComponents) `
 `;
 ChatInputStyles.displayName = "ChatInputStyles";
 
+export const ChatSendButton = styled.span `
+  color: ${colors.white04};
+  background-color: ${colors.base04};
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+  cursor: pointer;
+  opacity: .6;
+  transition: all .2s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+    margin-left: 4px;
+    transform: rotate(260deg);
+  }
+`;
+ChatSendButton.displayName = "ChatSendButton";
+
 export default ChatInputStyles;

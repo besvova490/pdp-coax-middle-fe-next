@@ -21,15 +21,16 @@ export const ChatMessageInfo = styled.div `
 const ChatMessageStyled = styled(ChatMessage) `
   margin: 20px 0;
   
-  &:nth-child(even) {
+  ${props => props.isMy
+  ? `
     text-align: right;
 
     ${ChatMessageContent} {
       border-radius: 8px 8px 0 8px;
       background-color: ${colors.base03};
       color: ${colors.white04};
-    }
-  }
+    }`
+  : ""}
 `;
 
 export default ChatMessageStyled;

@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import { FaUserFriends } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
+import { HiOutlineDotsCircleHorizontal } from "react-icons/hi";
 
 //types
 import ChatComponentInterface from "src/types/components/ChatComponent";
 
 //assets
-import ChatComponentStyles, { ChatTitle, ChatTime, ChatInfoText, ChatInfoIcon, ChatInfoIconWrapper } from "./ChatComponentStyles";
+import ChatComponentStyles, { ChatTitle, ChatTime, ChatInfoIcon, ChatUserAvatar } from "./ChatComponentStyles";
 
 
 function ChatComponent ({ name }: ChatComponentInterface) {
@@ -13,15 +14,17 @@ function ChatComponent ({ name }: ChatComponentInterface) {
 
   return (
     <ChatComponentStyles>
+      <ChatUserAvatar>
+        <FaUserCircle/>
+      </ChatUserAvatar>
       <div>
         <ChatTitle>{ name }</ChatTitle>
         <ChatTime>Jan 5 09:30</ChatTime>
       </div>
       <div>
-        <ChatInfoIconWrapper>
-          <ChatInfoIcon><FaUserFriends/></ChatInfoIcon>
-          <ChatInfoText>2 members</ChatInfoText>
-        </ChatInfoIconWrapper>
+        <ChatInfoIcon>
+          <HiOutlineDotsCircleHorizontal/>
+        </ChatInfoIcon>
       </div>
     </ChatComponentStyles>
   );

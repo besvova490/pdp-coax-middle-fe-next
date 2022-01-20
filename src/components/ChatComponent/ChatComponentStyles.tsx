@@ -5,8 +5,9 @@ const ChatComponentStyles = styled.div `
   border-radius: 8px;
   background-color: ${colors.disabled03};
   padding: 21px 28px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-gap: 20px;
   align-items: center;
   max-width: 900px;
   font-family: inherit;
@@ -36,10 +37,18 @@ const ChatInfoText = styled.p `
 ChatInfoText.displayName = "ChatInfoText";
 
 const ChatInfoIcon = styled.span `
-  color: ${colors.base04};
+  color: ${colors.black};
   height: 24px;
   width: 24px;
   display: block;
+  opacity: .3;
+  transition: all .2s;
+  margin-left: auto;
+
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
 
   svg {
     height: 100%;
@@ -56,12 +65,26 @@ const ChatInfoIconWrapper = styled.div `
 `;
 ChatInfoIconWrapper.displayName = "ChatInfoIconWrapper";
 
+const ChatUserAvatar = styled.div `
+  width: 30px;
+  height: 30px;
+  color: ${colors.base04};
+
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+`;
+
+ChatUserAvatar.displayName = "ChatUserAvatar";
+
 export {
   ChatInfoIconWrapper,
   ChatInfoIcon,
   ChatInfoText,
   ChatTime,
   ChatTitle,
+  ChatUserAvatar,
 };
 
 export default ChatComponentStyles;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRouter } from "next/router";
 import { useFormik } from "formik";
 
 //layout
@@ -16,6 +16,8 @@ import auth from "src/helpers/api/auth";
 import { InterfaceLoginData } from "../src/types/api/auth";
 
 function Login() {
+  const router = useRouter();
+
   const { handleChange, values, handleSubmit } = useFormik({
     initialValues: {
       email: "",
@@ -23,6 +25,7 @@ function Login() {
     },
     onSubmit: (data: InterfaceLoginData) => {
       auth.login(data)
+        .then(() => router.push("/"))
     },
   });
 

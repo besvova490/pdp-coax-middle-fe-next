@@ -1,14 +1,15 @@
-import { ReactNode } from "react";
+//types
+import InterfaceAuthFormLayout from "src/types/layout/AuthFormLayout";
 
 //assets
 import AuthFormIcon from "src/Icons/AuthFormIcon";
-import AuthFormLayoutStyles, { AuthFormIconStyles, AuthFormLayoutMain } from "./AuthFormLayoutStyles";
+import { AuthFormIconStyles, AuthFormLayoutMain } from "./AuthFormLayoutStyles";
 
 
-function AuthFormLayout({ children, ...resp }: { children: ReactNode }) {
+function AuthFormLayout({ children, ...resp }: InterfaceAuthFormLayout) {
 
   return (
-    <AuthFormLayoutStyles { ...resp }>
+    <form { ...resp }>
       <AuthFormLayoutMain>
         { children }
       </AuthFormLayoutMain>
@@ -17,7 +18,7 @@ function AuthFormLayout({ children, ...resp }: { children: ReactNode }) {
           <AuthFormIcon/>
         </AuthFormIconStyles>
       </div>
-    </AuthFormLayoutStyles>
+    </form>
   );
 }
 

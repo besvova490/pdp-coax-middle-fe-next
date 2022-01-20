@@ -4,5 +4,11 @@ interface ChatComponentInterface extends DetailedHTMLProps<HTMLAttributes<HTMLDi
   name: string;
 }
 
+export interface InterfaceChatHeader extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  name: string;
+  isTyping?: boolean;
+  isOnline?: boolean;
+}
+
 
 export default ChatComponentInterface;

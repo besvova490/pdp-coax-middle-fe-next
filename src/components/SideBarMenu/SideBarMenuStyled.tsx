@@ -2,6 +2,13 @@
 import styled from "@emotion/styled";
 import * as colors from "../../assets/scss/colors";
 
+//components
+import SideBarMenuItem from "./SideBarMenuItem";
+
+//types
+import { InterfaceSideBarMenuItem } from "src/types/components/SideBar";
+
+
 const SideBarMenuStyles = styled.nav `
   display: grid;
   grid-template-columns: 320px;
@@ -22,12 +29,12 @@ const MenuListContainer = styled.ul `
 `;
 MenuListContainer.displayName = "MenuListContainer";
 
-const MenuListItem = styled.li `
+const MenuListItem = styled(SideBarMenuItem) `
   padding: 16px 20px;
   width: 230px;
   border-radius: 10px;
-  color: ${(props: any) => props.active ? colors.white04 : colors.disabled04};
-  background: ${(props: any) => props.active ? colors.base04 : "transparent"};
+  color: ${(props: InterfaceSideBarMenuItem) => props.active ? colors.white04 : colors.disabled04};
+  background: ${(props: InterfaceSideBarMenuItem) => props.active ? colors.base04 : "transparent"};
   display: grid;
   grid-template-columns: auto auto;
   grid-gap: 10px;
@@ -42,7 +49,7 @@ const MenuListItem = styled.li `
     border-radius: 4px;
     height: 100%;
     left: -45px;
-    background: ${(props: any) => props.active ? colors.base04 : "transparent"};
+    background: ${(props: InterfaceSideBarMenuItem) => props.active ? colors.base04 : "transparent"};
   }
 `;
 MenuListItem.displayName = "MenuListItem";
