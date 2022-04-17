@@ -8,8 +8,9 @@ const ChatInputStyles = styled.div `
   border-radius: 8px;
   background-color: ${colors.disabled03};
   padding: 20px;
-  min-height: 80px;
+  flex: 0 0 auto;
   width: 100%;
+  position: relative;
 `;
 ChatInputStyles.displayName = "ChatInputStyles";
 
@@ -61,6 +62,10 @@ export const ChatSendButton = styled.span `
   cursor: pointer;
   opacity: .6;
   transition: all .2s;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 4;
 
   &:hover {
     opacity: 1;

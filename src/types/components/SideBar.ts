@@ -5,4 +5,5 @@ export interface InterfaceSideBarMenuItem extends DetailedHTMLProps<HTMLAttribut
   active?: boolean;
   label?: ReactNode;
   children?: ReactNode | Array<ReactNode>;
+  href?: string;
 }

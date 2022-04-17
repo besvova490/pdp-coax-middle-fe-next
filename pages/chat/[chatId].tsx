@@ -16,25 +16,34 @@ import { SocketMassage } from "src/types/api/socket";
 
 //helpers
 import socket from "src/helpers/socket";
-import { SOCKET_SESSION_STARTED, SOCKET_PRIVATE_MESSAGE, SOCKET_USER_IS_TYPING } from "src/helpers/constants";
+import messagesApi from "src/helpers/api/messages";
+import { SOCKET_PRIVATE_MESSAGE, SOCKET_USER_IS_TYPING } from "src/helpers/constants";
 
 
 function Chat() {
   const [messagesList, setMessagesList] = useState<Array<SocketMassage> | null>(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [isNewChat, setIsNewChat] = useState(false);
   const router = useRouter();
 
   const { chatId } = router.query;
 
   useEffect(() => {
+    if (chatId) {
+      messagesApi.getSingleChat(+chatId)
+        .then(resp => {
+          setMessagesList(resp.messages);
+        })
+        .catch(e => {
+          if (e.status === 404) setIsNewChat(true);
+        })
+    }
+  }, []);
+
+  useEffect(() => {
     socket.on(SOCKET_PRIVATE_MESSAGE, ({ message, from, to }) => {
       setMessagesList((state) => ([...(state || []), { message, from, to }]));
     });
-
-    socket.on(
-      SOCKET_SESSION_STARTED,
-      (user) => setMessagesList(user.messages.map(({ message, from, to }: SocketMassage) => ({ message, from, to })))
-    );
 
     socket.on(
       SOCKET_USER_IS_TYPING,
@@ -44,6 +53,11 @@ function Chat() {
 
   //method
   const handleSendMessage = (message: string) => {
+    if (isNewChat && chatId) {
+      messagesApi.createChat(+chatId);
+      setIsNewChat(false);
+    }
+
     if (chatId) {
       socket.emit(SOCKET_PRIVATE_MESSAGE, {
         message,

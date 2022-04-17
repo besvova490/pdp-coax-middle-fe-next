@@ -5,7 +5,7 @@ const ChatLayoutStyled = styled.div `
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  min-height: 100%;
+  height: 85vh;
   width: 100%;
 `;
 

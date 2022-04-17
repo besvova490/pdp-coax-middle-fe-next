@@ -11,3 +11,4 @@ export const SOCKET_USER_IS_TYPING = "USER_IS_TYPING";
 export const SOCKET_CONNECTION = "connection";
 export const SOCKET_DISCONNECT = "disconnect";
 export const SOCKET_CONNECTION_ERROR = "connection_error";
+export const SOCKET_GAME_COMMAND = "SOCKET_GAME_COMMAND";

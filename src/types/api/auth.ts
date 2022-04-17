@@ -30,6 +30,12 @@ export interface InterfaceSocketUser {
   isConnected: true;
 }
 
+export interface InterfaceChat {
+  memberId: string;
+  isMuted: string;
+  member: IUserProfile;
+}
+
 export interface InterfaceSocket extends Socket {
   userId?: number
 }

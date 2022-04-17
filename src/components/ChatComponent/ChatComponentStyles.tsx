@@ -1,12 +1,12 @@
 import styled from "@emotion/styled";
 import * as colors from "../../assets/scss/colors";
 
-const ChatComponentStyles = styled.div `
+const ChatComponentStyles = styled.a `
   border-radius: 8px;
   background-color: ${colors.disabled03};
   padding: 21px 28px;
   display: grid;
-  grid-template-columns: auto auto 1fr;
+  grid-template-columns: auto auto auto 1fr;
   grid-gap: 20px;
   align-items: center;
   max-width: 900px;
@@ -75,7 +75,6 @@ const ChatUserAvatar = styled.div `
     width: 100%;
   }
 `;
-
 ChatUserAvatar.displayName = "ChatUserAvatar";
 
 export {

@@ -10,14 +10,14 @@ import UserContextProvider from "src/context/UserSocketContext";
 //assets
 import MainLayoutStyled, { MainLayoutContent } from "./MainLayoutStyled";
 
-function MainLayout({ children }: { children: ReactNode }) {
+function MainLayout({ children, className = "" }: { children: ReactNode, className?: string, }) {
 
 
   return (
     <UserContextProvider>
       <MainLayoutStyled>
         <SideBar/>
-        <MainLayoutContent>
+        <MainLayoutContent className={className}>
           { children }
         </MainLayoutContent>
       </MainLayoutStyled>
