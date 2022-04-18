@@ -1,154 +1,327 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+
+//components
+import Input from "src/elements/Input";
+import {
+  GameWrapperStyled,
+  GameCaretStyled,
+  GameBallStyled,
+  PlayingFieldStyled,
+  ScoreBox,
+  GameControls,
+  GameSingleControl,
+  GameActionsLogs,
+  GameSingleControlWrapper
+} from "./GameStyles";
 
 //helpers
 import socket from "src/helpers/socket";
-import { SOCKET_GAME_COMMAND } from "src/helpers/constants";
+import {
+  SOCKET_GAME_CREATE_NEW_GAME,
+  SOCKET_GAME_NEW_GAME_CREATED,
+  SOCKET_GAME_USER_CONNECTED,
+  SOCKET_GAME_COMMAND,
+  SOCKET_GAME_COMMAND_ENEMY
+} from "src/helpers/constants";
 
-//assets
-import { GameWrapperStyled, GameCaretStyled, PlayingFieldStyled, GameBallStyled } from "./GameStyles";
 
-const speedIndex = 30;
+const ANIMATION_DURATION = .1;
+const GAME_FIELD_SIZE = {
+  width: 900,
+  height: 600,
+};
+const GAME_RACKET_SIZE = {
+  width: 12,
+  height: 120,
+};
+const GAME_BALL_SIZE = 30;
 
+const initialBallPosition = {
+  y: (GAME_FIELD_SIZE.height / 2) - GAME_BALL_SIZE,
+  x: (GAME_FIELD_SIZE.width / 2) - 55,
+  dy: -8,
+  dx: 16,
+};
+
+const initialRacketPosition = {
+  x: 0,
+  y: (GAME_FIELD_SIZE.height / 2) - (GAME_RACKET_SIZE.height / 2),
+}
+
+const initialEnemyRacketPosition = {
+  x: 52,
+  y: (GAME_FIELD_SIZE.height / 2) - (GAME_RACKET_SIZE.height / 2),
+}
+
+let racketPosition = initialRacketPosition;
+let racketPositionEnemy = initialEnemyRacketPosition;
+let ballPosition = initialBallPosition;
+let score = {
+  myScore: 0,
+  enemyScore: 0,
+};
 
 function GameWrapper() {
-  let ballX = 500
-  let ballY = 500;
-  let ballDY = -8;
-  let ballDX = 16;
-  let curretPosition = { x: 40, y: 40 };
 
-  const ref = useRef<HTMLCanvasElement | null>(null);
+  const [scoreState, setScore] = useState({
+    myScore: 0,
+    enemyScore: 0,
+  });
+  const [racketPositionState, setRacketPosition] = useState({
+    x: 0,
+    y: (GAME_FIELD_SIZE.height / 2) - (GAME_RACKET_SIZE.height / 2),
+  });
+  const [racketPositionEnemyState, setRacketPositionEnemy] = useState({
+    x: 52,
+    y: (GAME_FIELD_SIZE.height / 2) - (GAME_RACKET_SIZE.height / 2),
+  });
+  const [ballPositionState, setBallPosition] = useState(initialBallPosition);
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [messages, setMessages] = useState<Array<string>>([]);
+  const [isCreateRoom, setIsCreateRoom] = useState(false);
+  const [roomHash, setRoomHash] = useState("");
+  const [isEnemyConnected, setIsEnemyConnected] = useState(false);
+
+
+  useEffect(() => {
+    socket.on(SOCKET_GAME_COMMAND, ({ ball, rocket, score: scoreSocket }) => {
+      rocket && setRacketPosition(rocket);
+      ball && setBallPosition(ball);
+      scoreSocket && setScore(scoreSocket);
+    });
+
+    socket.on(SOCKET_GAME_COMMAND_ENEMY, ({ rocket }) => {
+      setRacketPositionEnemy(rocket);
+    });
+
+    socket.on(SOCKET_GAME_NEW_GAME_CREATED, ({ hash }) => {
+      setIsCreateRoom(true);
+      setRoomHash(hash);
+      setMessages(state => ([
+        ...state,
+        `Game created: ${hash};`,
+        "Waiting for Enemy;"
+      ]));
+    });
+
+    socket.on(SOCKET_GAME_USER_CONNECTED, message => {
+      setMessages(state => ([
+        ...state,
+        message,
+        "GAME Starting"
+      ]));
+
+      setIsEnemyConnected(true);
+      setIsGameStarted(true);
+    })
+  }, [socket]);
+
 
   useEffect(() => {
     document.addEventListener("keydown", e => {
       if (e.code === "ArrowUp") {
-        curretPosition.y += 20
+        if (isCreateRoom) {
+          racketPosition = {
+            ...racketPosition,
+            y: racketPosition.y + 10,
+          }
+        } else {
+          racketPositionEnemy = {
+            ...racketPositionEnemy,
+            y: racketPositionEnemy.y + 10,
+          }
+        }
       } else if (e.code === "ArrowDown") {
-        curretPosition.y = curretPosition.y - 20
-      }
+        if (isCreateRoom) {
+          racketPosition = {
+            ...racketPosition,
+            y: racketPosition.y - 10,
+          }
+        } else {
+          racketPositionEnemy = {
+            ...racketPositionEnemy,
+            y: racketPositionEnemy.y - 10,
+          }
+        }
+      } else if (e.code === "Space") setIsGameStarted(state => !state);
     })
-  }, []);
+  }, [isCreateRoom]);
 
   useEffect(() => {
-    if (!ref?.current) return;
+    if (!isGameStarted) return;
 
-    const canvas = ref.current;
-    canvas.width = 900;
-    canvas.height = 650;
-    const context = canvas.getContext("2d");
+    if (!isCreateRoom) {
+      const interval = setInterval(() => {
+        socket.emit(SOCKET_GAME_COMMAND_ENEMY, {
+          rocket: racketPositionEnemy,
+          to: roomHash,
+        });
+      }, 100);
 
-    if (!context) return;
-
-    context.globalCompositeOperation = "lighter";
-
-    context.beginPath();
-    context.fillStyle = "#060606";
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fill();
-
-    const drawRectangle = (x: number, y: number, w: number, h: number, border: number) => {
-      context.beginPath();
-      context.moveTo(x + border, y);
-      context.lineTo(x + w - border, y);
-      context.quadraticCurveTo(x + w - border, y, x + w, y + border);
-      context.lineTo(x + w, y + h - border);
-      context.quadraticCurveTo(x + w, y + h - border, x + w - border, y + h);
-      context.lineTo(x + border, y + h);
-      context.quadraticCurveTo(x + border, y + h, x, y + h - border);
-      context.lineTo(x, y + border);
-      context.quadraticCurveTo(x, y + border, x + border, y);
-      context.closePath();
-      context.stroke();
+      return () => clearInterval(interval);
     }
 
-    const gameField = (x: number, y: number, w: number, h: number, r: number, g: number, b: number) => {
-      context.shadowColor = `rgb(${r},${g},${b})`;
-      context.shadowBlur = 10;
-      context.strokeStyle = `rgba(${r},${g},${b},0.2)`;
-      context.lineWidth = 7.5;
-      drawRectangle(x, y, w, h, 1.5);
-      context.strokeStyle = `rgba(${r},${g},${b},0.2)`;
-      context.lineWidth = 6;
-      drawRectangle(x, y, w, h, 1.5);
-      context.strokeStyle = `rgba(${r},${g},${b},0.2)`;
-      context.lineWidth = 4.5;
-      drawRectangle(x, y, w, h, 1.5);
-      context.strokeStyle = `rgba(${r},${g},${b},0.2)`;
-      context.lineWidth = 3;
-      drawRectangle(x, y, w, h, 1.5);
-      context.strokeStyle = "#fff";
-      context.lineWidth = 1.5;
-      drawRectangle(x, y, w, h, 1.5);
-    }
-
-    const circle = (x: number, y: number) => {
-      context.beginPath();
-      context.shadowBlur = 20;
-      context.shadowColor = "#EA5050";
-      context.strokeStyle = "#EA5050";
-      context.lineWidth = 6;
-      context.arc(x, y, 15, 0, Math.PI * 2, true);
-      context.closePath();
-      context.stroke();
-    }
-
-    const curret = (x: number, y: number) => {
-      context.beginPath();
-      context.fillStyle = "#FFF";
-      context.rect(x, y, 15, 150);
-      context.fill();
-      context.shadowBlur = 1;
-      context.shadowColor = "#15D6B3";
-      context.lineWidth = 0;
-      context.stroke();
-      context.closePath();
-    }
-
-    gameField(10, 10, canvas.width - 15, canvas.height - 15, 13, 213, 252);
-    curret(100, 30);
-    curret(800, 30);
-
-    circle(ballX, ballY);
-
-    setInterval(() => {
-      canvas.setAttribute("height", "950");
-
-      gameField(10, 10, canvas.width - 15, canvas.height - 15, 13, 213, 252);
-      curret(curretPosition.x, curretPosition.y);
-      curret(800, 30);
-      circle(ballX, ballY);
-
-      if (ballY + ballDY > canvas.height || ballY + ballDY < 0) {
-        console.log("y")
-        if (ballY > curretPosition.y && ballY < (curretPosition.y)) {
-          ballDX = -ballDX;
-        }
-
-        ballDY = -ballDY;
+    const interval = setInterval(() => {
+      if (ballPosition.y + ballPosition.dy > 560 || ballPosition.y * 2 < 0) {
+        ballPosition = {
+          ...ballPosition,
+          dy: -ballPosition.dy,
+        };
       }
-
-      let ballNextX = ballX + ballDX;
-
-      if (ballNextX > canvas.width || ballNextX < 60) {
-        if (ballY > curretPosition.y && ballY < (curretPosition.y + 100) && ballNextX < curretPosition.x) {
-          ballDX = -ballDX;
+  
+      const ballNextX = ballPosition.x + ballPosition.dx;
+  
+      if (ballNextX > 800) {
+        if (ballPosition.y > racketPositionEnemy.y && ballPosition.y < (racketPositionEnemy.y + 150)) {
+          ballPosition = {
+            ...ballPosition,
+            dx: -ballPosition.dx,
+          }
         } else {
-          ballDX = -ballDX;
+          // ballPosition = initialBallPosition
+          // setIsGameStarted(false);
+          ballPosition = {
+            ...ballPosition,
+            dx: -ballPosition.dx,
+          }
+
+          score = {
+            ...score,
+            myScore: score.myScore + 1,
+          };
+        }
+      } else if (ballNextX < 0) {
+        if (ballPosition.y > racketPosition.y && ballPosition.y < (racketPosition.y + 150)) {
+          ballPosition = {
+            ...ballPosition,
+            dx: -ballPosition.dx,
+          }
+        } else {
+          // ballPosition = initialBallPosition
+          ballPosition = {
+            ...ballPosition,
+            dx: -ballPosition.dx,
+          }
+          // setIsGameStarted(false);
+          score = {
+            ...score,
+            enemyScore: score.enemyScore + 1,
+          };
         }
       }
+  
+      ballPosition = {
+        ...ballPosition,
+        x: ballPosition.x + ballPosition.dx,
+        y: ballPosition.y + ballPosition.dy,
+      };
 
-      ballX += ballDX;
-      ballY += ballDY;
+      socket.emit(SOCKET_GAME_COMMAND, {
+        ball: ballPosition,
+        rocket: racketPosition,
+        rocketEnemy: racketPositionEnemy,
+        score,
+        to: roomHash,
+      });
     }, 100);
-  }, []);
 
-  // useEffect(() => {
-  //   socket.on(SOCKET_GAME_COMMAND, ({ newPosition }) => setRivalCaretPosition(newPosition));
-  // }, [socket]);
+    return () => clearInterval(interval);
+  }, [ballPosition, isGameStarted]);
 
-  return (
-    <canvas style={{ width: "900px", height: "650px" }} ref={ref}/>
-  );
+  const onCreateRoom = () => {
+    socket.emit(SOCKET_GAME_CREATE_NEW_GAME);
+  }
+
+  const onJoinRoom = () => {
+    socket.emit(SOCKET_GAME_USER_CONNECTED, { game: roomHash });
+  }
+
+
+  return (<>
+    <GameWrapperStyled>
+      <ScoreBox>{`${scoreState.myScore} : ${scoreState.enemyScore}`}</ScoreBox>
+      {
+        !isGameStarted
+          ? <PlayingFieldStyled>
+            PAUSE
+          </PlayingFieldStyled>
+          : null
+      }
+      <motion.div
+        style={{
+          display: "inline-block",
+          position: "absolute",
+        }}
+        animate={{
+          x: racketPositionState.x,
+          y: racketPositionState.y,
+        }}
+        transition={{ duration: ANIMATION_DURATION }}
+      >
+        <GameCaretStyled/>
+      </motion.div>
+      <motion.div
+        style={{
+          display: "inline-block",
+          position: "absolute",
+        }}
+        animate={{
+          x: ballPositionState.x,
+          y: ballPositionState.y,
+        }}
+        transition={{ duration: ANIMATION_DURATION }}
+      >
+        <GameBallStyled/>
+      </motion.div>
+      <motion.div
+        style={{
+          display: "inline-block",
+          position: "absolute",
+          right: racketPositionEnemyState.x,
+        }}
+        animate={{
+          x: `${racketPositionEnemyState.x}%`,
+          y: racketPositionEnemyState.y,
+        }}
+        transition={{ duration: ANIMATION_DURATION }}
+      >
+        <GameCaretStyled/>
+      </motion.div>
+    </GameWrapperStyled>
+    {
+      !isEnemyConnected
+        ? <GameControls>
+          {
+            isCreateRoom
+              ? null
+              : <>
+                <GameSingleControl
+                  onClick={onCreateRoom}
+                >
+                Create Game
+                </GameSingleControl>
+                <GameSingleControlWrapper>
+                  <Input onChange={e => setRoomHash(e.target.value)}/>
+                  <GameSingleControl
+                    onClick={onJoinRoom}
+                  >
+                  Join Game
+                  </GameSingleControl>
+                </GameSingleControlWrapper>
+              </>
+          }
+        </GameControls>
+        : null
+    }
+    <GameActionsLogs>
+      {
+        messages.map((item, index) => (
+          <li key={index}>{ item }</li>
+        ))
+      }
+    </GameActionsLogs>
+  </>);
 }
 
 export default GameWrapper;
