@@ -10,10 +10,6 @@ const InputStyled = styled.input `
   background-color: ${colors.disabled05};
   border-radius: 5px;
   transition: all 0.2s;
-
-  &:focus, &:hover {
-    background-color: ${colors.white04};
-  }
 `;
 InputStyled.displayName = "InputStyled";
 

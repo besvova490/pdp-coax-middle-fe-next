@@ -4,6 +4,11 @@ import * as colors from "../../assets/scss/colors";
 //type
 import InterfaceButton from "../../types/elements/Button";
 
+const buttonSize = {
+  large: { height: "46px", padding: "12px 0", "min-width": "100px" },
+  middle: { height: "36px", padding: "0 8px", "min-width": "80px" },
+  small: { height: "30px", padding: "0 8px", "min-width": "50px" },
+};
 
 const getBackgroundColor = ({ primary, danger, success, warning, disabled }: InterfaceButton) => {
   switch (true) {
@@ -27,10 +32,10 @@ const isDefaultButton = ({ primary, danger, success, warning }: InterfaceButton)
 }
 
 const Button = styled.button `
-  min-width: 100px;
+  min-width: ${({ size = "large" }: InterfaceButton) => buttonSize[size]["min-width"]};
   width: max-content;
-  height: 45px;
-  padding: 12px 0;
+  height: ${({ size = "large" }: InterfaceButton) => buttonSize[size].height};
+  padding: ${({ size = "large" }: InterfaceButton) => buttonSize[size].padding};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +43,7 @@ const Button = styled.button `
   line-height: 22px;
   background-color: ${(props: InterfaceButton) => getBackgroundColor(props)};
   color: ${(props: InterfaceButton) => props.disabled || !isDefaultButton(props) ? colors.white04 : colors.base04};
-  border-radius: 10px;
+  border-radius: 8px;
   border: 2px solid ${(props: InterfaceButton) => props.disabled || !isDefaultButton(props) ? "transparent" : colors.base04};
   cursor: pointer;
   transition: all .15s;

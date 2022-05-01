@@ -11,7 +11,7 @@ const navLinks = [
   { label: "How it works", href: "#" },
   { label: "Pricing", href: "#" },
   { label: "Why it’s important", href: "#" },
-  { label: "About us", href: "#" },
+  { label: "About us", href: "/about-us" },
   { label: "Contact", href: "#" },
 ];
 

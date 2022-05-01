@@ -1,6 +1,14 @@
 /* eslint-disable no-unused-vars */
-import { useState, useRef } from "react";
-import { Editor, EditorState, convertFromRaw, RichUtils, Modifier, ContentState } from "draft-js";
+import { useState, useRef, useEffect } from "react";
+import {
+  Editor,
+  EditorState,
+  convertFromRaw,
+  RichUtils,
+  Modifier,
+  ContentState,
+  convertFromHTML
+} from "draft-js";
 import { FiSend } from "react-icons/fi";
 import { stateToHTML } from "draft-js-export-html";
 
@@ -35,10 +43,25 @@ const emptyContentState = convertFromRaw({
   ],
 });
 
-function ChatInput({ onSendMessage, onBlur, onFocus }: InterfaceChatInput) {
+function ChatInput(props: InterfaceChatInput) {
+  const { onSendMessage, onBlur, onFocus, onChange, showSendIcon = true, value } = props;
+
   const [editorState, setEditorState] = useState(() => EditorState.createWithContent(emptyContentState));
 
   const editor = useRef(null);
+
+  useEffect(() => {
+    if (typeof value !== "string" || editorState.getCurrentContent().hasText()) return;
+
+    const blocksFromHTML = convertFromHTML(value || "");
+
+    setEditorState(EditorState.createWithContent(
+      ContentState.createFromBlockArray(
+        blocksFromHTML.contentBlocks,
+        blocksFromHTML.entityMap,
+      )
+    ));
+  }, [value]);
 
   const currentStyles = editorState.getCurrentInlineStyle();
 
@@ -69,8 +92,15 @@ function ChatInput({ onSendMessage, onBlur, onFocus }: InterfaceChatInput) {
 
     const editorStateClear = EditorState.push(editorState, ContentState.createFromText(""), "delete-character");
 
-    onSendMessage(`${content}`);
+    onSendMessage && onSendMessage(`${content}`);
     setEditorState(editorStateClear);
+  }
+
+  const handleChange = (e: EditorState) => {
+    setEditorState(e);
+
+    const content = stateToHTML(e.getCurrentContent());
+    onChange && onChange(content);
   }
 
   return (
@@ -94,14 +124,18 @@ function ChatInput({ onSendMessage, onBlur, onFocus }: InterfaceChatInput) {
       <Editor
         ref={editor}
         editorState={editorState}
-        onChange={setEditorState}
+        onChange={handleChange}
         placeholder="Type you massage"
         onFocus={() => onFocus && onFocus()}
         onBlur={() => onBlur && onBlur()}
       />
-      <ChatSendButton onClick={handleSendMessage}>
-        <FiSend/>
-      </ChatSendButton>
+      {
+        showSendIcon
+          ? <ChatSendButton onClick={handleSendMessage}>
+            <FiSend/>
+          </ChatSendButton>
+          : null
+      }
     </ChatInputStyles>
   );
 }

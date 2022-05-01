@@ -11,4 +11,5 @@ extends DetailedHTMLProps<HTMLAttributes<HTMLButtonElement>, HTMLButtonElement> 
   warning?: boolean;
   primary?: boolean;
   htmlType?: "submit" | "reset" | "button";
+  size?: "large" | "middle" | "small";
 }
