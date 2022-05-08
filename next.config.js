@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
   reactStrictMode: true,
+  experimental: {
+    outputStandalone: true,
+  },
   
   webpack(config, options) {
     const { isServer } = options;
