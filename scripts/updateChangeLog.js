@@ -12,7 +12,7 @@ const args = require('yargs').argv;
     if (!message) return process.exit(1);
 
     const data = render(
-      ` - [{{message}}](https://coaxsoftware.atlassian.net/browse/{{branch}}) \n`,
+      ` - [{{branch}} {{message}}](https://coaxsoftware.atlassian.net/browse/{{branch}}) \n`,
       {
         message,
         branch: args.branch,
