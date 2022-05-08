@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm run lint
+
+# expection commit message from user
+local_branch_name="$(git rev-parse --abbrev-ref HEAD)"
+exec < /dev/tty
+node ./scripts/updateChangeLog.js --branch=$local_branch_name
+
+git add -A .

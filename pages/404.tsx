@@ -7,7 +7,6 @@ import NotFoundPage from "src/containers/NotFoundPage";
 
 function PageNotFound() {
 
-
   return (
     <AuthLayout>
       <NotFoundPage/>
