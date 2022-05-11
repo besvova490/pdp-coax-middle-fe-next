@@ -1,0 +1,28 @@
+@startuml containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!define MATERIAL https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/material
+!include DEVICONS/react.puml
+!include DEVICONS/nodejs.puml
+!include DEVICONS/aws.puml
+!include DEVICONS/redis.puml
+!include DEVICONS/postgresql.puml
+!include FONTAWESOME/cc_stripe.puml
+!include MATERIAL/email.puml
+!include MATERIAL/book.puml
+title "PDP Containers"
+Person(user, "User", "The typical user of pdp website")
+Person(admin, "Admin", "The admin user of pdp website")
+System_Boundary(boundary, "PDP Website System"){
+    Container(web, "Web Client App", "ReactJS", "The FE application (Next.js)", $sprite="react")
+    Container(api, "API", "Express", "node.js", $sprite="nodejs")
+    ContainerDb(db, "Rel. Database", "PostgreSQL", "Relational database storage", $sprite="postgresql")
+    ContainerDb(redis, "Redis", "Redis", "Key-value DB for background processing", $sprite="redis")
+    Rel_D(api, db, "Read / write data")
+    Rel_D(api, redis, "Store messages")
+    Rel_R(web, api, "Requests the API")
+    Rel_D(admin, web, "Uses the app to CRUD blogs and chat with users")
+    Rel_D(user, web, "Uses the app to view blogs and chat with other users")
+}
+@enduml

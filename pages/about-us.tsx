@@ -113,7 +113,7 @@ function AboutUsPage({ postsResp }: { postsResp: ListResp<BlogPostInterface> }) 
 export const getServerSideProps: GetServerSideProps = async ({ query }: GetServerSidePropsContext) => {
   const { page = 1, category, tag } = query;
 
-  const posts = await postsApi.getPosts({ page, category, tag } as any);
+  const posts = await postsApi.getPosts({ page, category, tag } as any).catch(e => console.log(e));
 
   return {
     props: { postsResp: posts },

@@ -1,34 +1,85 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+# Rate It
+___
+## Project description
+___
+Set of dashboards aimed to provide actual sales data to define and adjust dealership team pace
+## Related resources
+___
+* [GitHub repo](#)
+* [Jira](#)
+* [Staging](#)
+* [SRS](#)
+* [Design](#)
+* [API Documentation](#)
+## Environment variables
+___
+### Example
 ```
+NEXT_PUBLIC_APP_HOST=
+```
+### Description
+* ``NEXT_PUBLIC_APP_HOST`` - API url
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Runtime environment
+___
+The infrastructure of Reate It consists of the following services:
+* Web Client App (Next.js)
+* API (Express)
+* PostgreSQL database
+* Redis in-memory database
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+![architecture](./architecture.png)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Main Branches
+____
+`development` - using to merge all new changes before the further actions;<br>
+`staging` - auto-deploy to [staging](#) is configured for this branch;
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Deployment instructions
+___
+### Staging deploy
+Staging is deployed automatically when there are changes in `staging` branch in a repository.
 
-## Learn More
+### Production deploy
+Production is deployed when there are changes in `production` branch in a repository(after approved in AWS pipeline).
 
-To learn more about Next.js, take a look at the following resources:
+## Docker
+___
+Docker file already included into project to create docker image just run `docker build .`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Commands
+___
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Clone repo from [gitHub](#)
+ ```
+ git clone REPO_URL
+ cd timeAI
+ npm install
+ ```
 
-## Deploy on Vercel
+Then you should create `.env` file in the root folder and add there the variables listed in `.env.example` file.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+In the project directory, you can run:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### `npm start`
+
+Runs the app in the development mode.<br>
+
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
+
+### `npm run lint`
+
+Checks your code with ESLint.<br>
+
+### `npm run test`
+
+Run all test.<br>
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
