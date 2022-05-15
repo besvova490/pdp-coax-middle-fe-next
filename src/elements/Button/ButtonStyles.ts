@@ -5,9 +5,9 @@ import * as colors from "../../assets/scss/colors";
 import InterfaceButton from "../../types/elements/Button";
 
 const buttonSize = {
-  large: { height: "46px", padding: "12px 0", "min-width": "100px" },
-  middle: { height: "36px", padding: "0 8px", "min-width": "80px" },
-  small: { height: "30px", padding: "0 8px", "min-width": "50px" },
+  large: { height: "46px", padding: "12px", "min-width": "100px" },
+  middle: { height: "36px", padding: "8px", "min-width": "80px" },
+  small: { height: "30px", padding: "8px", "min-width": "50px" },
 };
 
 const getBackgroundColor = ({ primary, danger, success, warning, disabled }: InterfaceButton) => {

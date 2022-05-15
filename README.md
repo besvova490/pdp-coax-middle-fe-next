@@ -16,9 +16,13 @@ ___
 ### Example
 ```
 NEXT_PUBLIC_APP_HOST=
+NEXT_PUBLIC_APP_GRAPH_URL=
+NEXT_PUBLIC_APP_MUTATION_TOKEN=
 ```
 ### Description
 * ``NEXT_PUBLIC_APP_HOST`` - API url
+* ``NEXT_PUBLIC_APP_GRAPH_URL`` - CMS url
+* ``NEXT_PUBLIC_APP_MUTATION_TOKEN`` - Auth token for cms
 
 ## Runtime environment
 ___

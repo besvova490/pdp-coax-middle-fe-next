@@ -10,4 +10,5 @@ extends DetailedHTMLProps<HTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   value?: string;
   name?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  fullWidth?: boolean;
 }

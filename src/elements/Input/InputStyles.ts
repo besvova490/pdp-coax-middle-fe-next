@@ -1,11 +1,14 @@
 import styled from "@emotion/styled";
 import * as colors from "../../assets/scss/colors";
 
+// types
+import InterfaceInput from "../../types/elements/Input";
+
 
 const InputStyled = styled.input `
   padding: 0 16px;
   height: 35px;
-  width: auto;
+  width: ${({ fullWidth }: InterfaceInput) => fullWidth ? "100%" : "auto"};
   min-width: 200px;
   background-color: ${colors.disabled05};
   border-radius: 5px;
@@ -17,7 +20,7 @@ export const InputWrapper = styled.div `
   display: grid;
   grid-template-column: 100%;
   grid-gap: 4px;
-  width: 250px;
+  width: ${({ fullWidth }: InterfaceInput) => fullWidth ? "100%" : "auto"};
 `;
 InputWrapper.displayName = "InputWrapper";
 

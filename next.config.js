@@ -4,7 +4,12 @@ module.exports = {
   experimental: {
     outputStandalone: true,
   },
-  
+  images: {
+    domains: [
+      "media.graphassets.com",
+    ],
+  },
+
   webpack(config, options) {
     const { isServer } = options;
     config.module.rules.push({

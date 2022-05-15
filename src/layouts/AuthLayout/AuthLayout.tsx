@@ -13,7 +13,7 @@ function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <AuthLayoutStyled>
       <Header/>
-      <main>
+      <main className="rate-it__page-content">
         { children }
       </main>
     </AuthLayoutStyled>

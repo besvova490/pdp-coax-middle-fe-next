@@ -7,6 +7,13 @@ const AuthLayoutStyled = styled.div `
   justify-content: flex-start;
   align-items: center;
   min-height: 100vh;
+
+  .rate-it__page-content {
+    flex: 1 1 auto;
+
+    width: 1200px;
+    padding: 40px;
+  }
 `;
 
 AuthLayoutStyled.displayName = "AuthLayoutStyled";

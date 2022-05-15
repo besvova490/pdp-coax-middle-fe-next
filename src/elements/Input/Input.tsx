@@ -10,7 +10,7 @@ function Input({ label, error, disabled, onChange, ...props }: InterfaceInput) {
 
 
   return (
-    <InputWrapper>
+    <InputWrapper fullWidth={props.fullWidth}>
       { label && <InputLabel>{ label }</InputLabel> }
       <InputStyled
         { ...props }
