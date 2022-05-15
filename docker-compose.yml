@@ -14,25 +14,22 @@ services:
       - 5432
     networks:
       - main-network
-    environment:
-      POSTGRES_PASSWORD: root
-      POSTGRES_USER: root
-      POSTGRES_DB: pdp_coax
+    env_file:
+      - .env
     volumes:
       - pgReportData:/var/lib/postgresql/data
   api:
     image: pdp-coax-middle-be
     container_name: pdp-coax-middle-be
-    expose:
-      - 8080
+    ports:
+      - 8080:8080
     networks:
       - main-network
     depends_on:
       - redis
       - postgres
-    environment:
-      EXPRESS_APP_REDIS_HOST: redis
-      EXPRESS_APP_DB_HOST: postgres
+    env_file:
+      - .env
   next-js:
     image: pdp-coax-middle-fe
     container_name: next-js-fe
@@ -42,8 +39,8 @@ services:
       - api
     networks:
       - main-network
-    environment:
-      NEXT_PUBLIC_APP_HOST: api:8080
+    env_file:
+      - .env
 networks:
   main-network:
     driver: bridge
@@ -51,4 +48,3 @@ networks:
 volumes:
   pgReportData:
     driver: local
-
