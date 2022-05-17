@@ -25,6 +25,7 @@ function Pagination({ page, pageSize, total, onChange }: PaginationInterface) {
 
   const renderPageBlock = (pageNumber: number) => (
     <div
+      key={`page-${pageNumber}`}
       onClick={() => handleChange(pageNumber)}
       className={`pagination-single-page ${pageNumber === activePage ? "pagination-single-page_active" : ""}`}
     >
@@ -36,7 +37,7 @@ function Pagination({ page, pageSize, total, onChange }: PaginationInterface) {
 
   return (
     <PaginationStyles>
-      <div className="pagination-single-page" onClick={() => handleChange(activePage - 1)}>
+      <div className="pagination-single-page" onClick={() => activePage !== 1 && handleChange(activePage - 1)}>
         <BsArrowLeftCircle/>
       </div>
       { activePage !== 1
@@ -47,7 +48,7 @@ function Pagination({ page, pageSize, total, onChange }: PaginationInterface) {
         pagesTyRender.slice(activePage, activePage + 3).map((_, index) => renderPageBlock(activePage + index))
       }
       { renderPageBlock(lastPage) }
-      <div className="pagination-single-page" onClick={() => handleChange(activePage + 1)}>
+      <div className="pagination-single-page" onClick={() => activePage !== lastPage && handleChange(activePage + 1)}>
         <BsArrowRightCircle/>
       </div>
     </PaginationStyles>

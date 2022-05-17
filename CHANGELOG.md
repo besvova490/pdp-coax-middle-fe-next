@@ -8,3 +8,4 @@ ___
  - [master master added readme file and c4 uml](https://coaxsoftware.atlassian.net/browse/master) 
  - [master added graphcms](https://coaxsoftware.atlassian.net/browse/master) 
  - [master master upodated docker-compose.yml](https://coaxsoftware.atlassian.net/browse/master) 
+ - [master added graphcms to the project](https://coaxsoftware.atlassian.net/browse/master) 

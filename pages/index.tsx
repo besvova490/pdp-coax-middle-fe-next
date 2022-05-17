@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-
 // components
 import HowItWorks from "src/containers/Home/HowItWorks";
 import TopSection from "src/containers/Home/TopSection";
@@ -9,6 +7,7 @@ import ContactUs from "src/containers/ContactUs";
 import AuthLayout from "src/layouts/AuthLayout";
 
 // helpers
+import home from "src/helpers/graphcms/home";
 import apolloClient from "src/helpers/apolloClient";
 
 // types
@@ -33,24 +32,7 @@ function Home({ homePageTops, howItWorks }: InterfaceHomePageData) {
 
 export const getStaticProps = async () => {
   const resp = await apolloClient.query<any>({
-    query: gql `
-    query HomePageData {
-      howItWorksPlural {
-        title
-        icon {
-          url
-        }
-        description
-      }
-      homePageTops {
-        title
-        description
-        image {
-          url
-        }
-      }
-    }    
-    `,
+    query: home.getHomePageData,
   }).catch(() => null);
 
 

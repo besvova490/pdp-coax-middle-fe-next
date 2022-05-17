@@ -1,6 +1,6 @@
 import React from "react";
 import { useFormik } from "formik";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 
 // elements
@@ -10,22 +10,9 @@ import Input from "src/elements/Input";
 // components
 import { ContactUsStyled } from "./ContactUs.styled";
 
+// helpers
+import contactUs from "src/helpers/graphcms/contactUs";
 
-const mutation = gql `
-mutation createContactUs($firstName: String!, $lastName: String!, $email: String!, $phone: String!, $message: String!) {
-  createContactUs(
-    data: {
-      firstName: $firstName
-      lastName: $lastName
-      email: $email
-      phone: $phone
-      message: $message
-    }
-  ) {
-    id
-  }
-}
-`;
 
 const initialValues = {
   firstName: "",
@@ -35,8 +22,9 @@ const initialValues = {
   message: "",
 };
 
+
 function ContactUs() {
-  const [addContactUs] = useMutation(mutation);
+  const [addContactUs] = useMutation(contactUs.createContactUs);
 
   const { handleChange, values, handleSubmit, resetForm } = useFormik({
     initialValues,

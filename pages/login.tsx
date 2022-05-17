@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 //layout
 import AuthLayout from "src/layouts/AuthLayout";
@@ -26,6 +27,7 @@ function Login() {
     onSubmit: (data: InterfaceLoginData) => {
       auth.login(data)
         .then(() => router.push("/"))
+        .catch(e => toast.error(e.details))
     },
   });
 

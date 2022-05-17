@@ -8,11 +8,11 @@ import HeaderStyled, { HeaderLogo, HeaderLogoIcon, HeaderNavigation, HeaderNavig
 
 
 const navLinks = [
-  { label: "How it works", href: "#" },
-  { label: "Pricing", href: "#" },
-  { label: "Why it’s important", href: "#" },
+  { label: "Home", href: "/" },
+  { label: "Blog", href: "/posts" },
+  { label: "Why it’s important", href: "/404" },
   { label: "About us", href: "/about-us" },
-  { label: "Contact", href: "#" },
+  { label: "Contact", href: "/contact-us" },
 ];
 
 
@@ -36,8 +36,8 @@ function Header() {
         </HeaderNavigation>
       </menu>
       <HeaderNavigationAction>
-        <Button primary={false}>Login</Button>
-        <Button primary>Sign up</Button>
+        <Button href="/login" primary={false}>Login</Button>
+        <Button href="/register" primary>Sign up</Button>
       </HeaderNavigationAction>
     </HeaderStyled>
   );
